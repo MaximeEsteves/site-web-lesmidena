@@ -1,14 +1,9 @@
+import { getAllProducts, toFullURL } from './api/apiClient.js';
+
 // Récupère la référence produit depuis l'URL
 function getProduitDepuisURL() {
   const params = new URLSearchParams(window.location.search);
   return params.get('ref');
-}
-const API_BASE = "http://localhost:3000/";
-function toFullURL(path) {
-  // Si c’est déjà une URL complète, on retourne tel quel
-  if (/^https?:\/\//.test(path)) return path;
-  // Sinon on préfixe
-  return API_BASE + path.replace(/^\/+/,"");
 }
 
 // Variables globales
@@ -39,17 +34,6 @@ let shareData = {
   url:   window.location.href
 };
 
-// FETCH DES PRODUITS DEPUIS L’API
-async function fetchAllProducts() {
-  try {
-    const res = await fetch("http://localhost:3000/api/produits");
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  } catch (err) {
-    console.error("Échec du fetch des produits :", err);
-    return [];
-  }
-}
 
 // Met à jour l'image principale et la modale
 function updateMainImage(index) {
@@ -219,7 +203,7 @@ function produitSupplementaireAutres() {
 
 // Initialisation de l'ensemble
 async function init() {
-  allProducts = await fetchAllProducts();
+  allProducts = await getAllProducts();
   const ref = getProduitDepuisURL();
   produit = allProducts.find(p => p.reference === ref);
   if (!produit) {

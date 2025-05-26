@@ -1,33 +1,12 @@
-//  import stockArticles from './stock-article.js';
-  const focusableSelector = 'a, textarea, button, i[tabindex], input, select';
-  let focusables = [];
-  let previousActiveElement = null;
 // Fonction utilitaire fetchData
-async function fetchData(url, options = {}) {
+import { getAllProducts, deleteProduct, createProduct, updateProduct } from './api/apiClient.js';
+const baseURL = "http://localhost:3000/";
+document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const res = await fetch(url, options);
-    if (res.ok) {
-      return await res.json();
-    } else {
-      throw new Error(`Erreur HTTP: ${res.status}`);
-    }
-  } catch (error) {
-    console.error("fetchData error:", error);
-    throw error;
-  }
-}
- document.addEventListener('DOMContentLoaded', () => {
     document
       .getElementById('file-upload-couverture')
       .addEventListener('change', previewFileCouverture);
-
-    // document
-    //   .getElementById('file-upload-images')
-    //   .addEventListener('change', previewFilesProduit);
-  });
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const productsData = await fetchData("http://localhost:3000/api/produits");
+    const productsData = await getAllProducts();
 
     // Appeler projets() et filtres() avec les données récupérées
     projets(productsData);
@@ -141,7 +120,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     img.dataset.src = baseURL + raw;
     img.alt = `image de ${produit.nom}`;
 
-    console.log(baseURL + raw)
     const figcaption = document.createElement("h3");
     figcaption.textContent = produit.nom;
 
@@ -161,7 +139,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     figure.appendChild(description);
     figure.appendChild(prix);
     figure.appendChild(bouton);
-    portfolio.appendChild(figure);
 
   // Boutons pour utilisateur connecté
   if (localStorage.getItem("token")) {
@@ -184,15 +161,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     btnModifier.appendChild(iconModifier);
     btnModifier.addEventListener("click", () => {
       initProductModal('edit', produit)
+      console.log("ii");
+      
     });
     figure.appendChild(btnModifier);
   }
 
     portfolio.appendChild(figure);
     imgObserver.observe(img);
-
-    imgObserver.observe(img);
-
     img.addEventListener("click", () => {
       window.location.href = `produit.html?ref=${produit.reference}`;
     });
@@ -203,7 +179,6 @@ const editorDescriptionComplete = new Quill('#editor-descriptionComplete', { the
 
 // 2) Fonction commune
 async function initProductModal(mode, produit = {}) {
-  const baseURL         = "http://localhost:3000/";
   const overlay         = document.querySelector('.modal-content');
   const modal           = document.querySelector('.modal');
   const titreModal      = modal.querySelector('.titre-modal');
@@ -225,6 +200,7 @@ async function initProductModal(mode, produit = {}) {
     );
   }
 
+    
   // --- 1) Titre & bouton ---
   if (mode === 'add') {
     titreModal.textContent = 'Ajouter un produit';
@@ -335,51 +311,35 @@ async function initProductModal(mode, produit = {}) {
   };
 
   // --- 5) Afficher la modale ---
-  overlay.style.display = 'flex';
-  modal.style.display   = 'flex';
-
+  modal.style.display = 'flex';
+    overlay.style.display = 'flex';
   // --- 6) Soumission ---
   form.onsubmit = async e => {
-    e.preventDefault();
-    const token   = localStorage.getItem('token');
-    // Hidden Quill
-    hiddenDescInput.value = editorDescriptionComplete.root.innerHTML;
-
-    // Build FormData
-    const formData = new FormData(form);
-for (let [key, value] of formData.entries()) {
-  console.log(key, value);
+  e.preventDefault();
+  const token = localStorage.getItem('token');
+  if (!token) {
+  alert("Vous devez être connecté pour effectuer cette action.");
+  return;
 }
-    // Append old images to delete
-    imagesASupprimer.forEach(path => {
-      formData.append('imagesASupprimer', path);
-    });
+  hiddenDescInput.value = editorDescriptionComplete.root.innerHTML;
+  const formData = new FormData(form);
+  imagesASupprimer.forEach(path => formData.append('imagesASupprimer', path));
 
-    // Determine endpoint & method
-    const url    = mode === 'add'
-      ? `${baseURL}api/produits`
-      : `${baseURL}api/produits/${produit._id}`;
-    const method = mode === 'add' ? 'POST' : 'PUT';
-
-    try {
-      const res = await fetch(url, {
-        method,
-        headers: { 'Authorization': `Bearer ${token}` },
-        body: formData
-      });
-      if (!res.ok) {
-        console.error('Erreur', res.status, await res.text());
-        return;
-      }
-      // Fermer + rafraîchir
-      overlay.style.display = 'none';
-      modal.style.display   = 'none';
-      const data = await fetchData(`${baseURL}api/produits`);
-      projets(data);
-    } catch (err) {
-      console.error('Fetch error:', err);
+  try {
+    if (mode === 'add') {
+      await createProduct(formData, token);
+    } else {
+      await updateProduct(produit._id, formData, token);
     }
-  };
+    overlay.style.display = 'none';
+    modal.style.display = 'none';
+
+    const data = await getAllProducts();
+    projets(data);
+  } catch (err) {
+    console.error('Fetch error:', err);
+  }
+};
 }
 
 
@@ -487,24 +447,13 @@ async function deletePhoto(figure) {
   
   const token = window.localStorage.getItem("token");
   try {
-    const response = await fetch(`http://localhost:3000/api/produits/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    if (response.ok) {
-      // Supprimez seulement l'élément du DOM
+    deleteProduct(id, token);
       figure.remove();
-    } else {
-      console.error("Erreur lors de la suppression, statut:", response.status);
-    }
+    
   } catch (error) {
     console.error("Erreur pendant la suppression :", error);
   }
   
-  updateFocusables();
 }
 
 
@@ -529,29 +478,9 @@ async function deletePhoto(figure) {
          // au clic en dehors de la modale, ferme la modale
        closeModal();
      }
-     if (e.target.closest(".icone-supprimer")) {
-         const figure = e.target.closest("figure");
-         // Suppression d'une photo 
-         deletePhoto(figure);
-     }
      if (e.target.closest(".div-modification")) {
          initProductModal('add');
-     }
- });
-
- /* eventListener "keydown" */
- window.addEventListener("keydown", function(e) {
-     const modal = document.querySelector(".modal");
-     if (e.key === "Escape" || e.key === "Esc") {
-         closeModal();
-     }
-     // Exécuter le focus trap uniquement si la modale est visible
-     if (e.key === "Tab") {
-         // Vérifier si la modale est ouverte (par exemple, mode flex ou autre)
-         if (window.getComputedStyle(modal).display !== "none") {
-             e.preventDefault();
-             focusInModal(e);
-         }
+         console.log("zoz")
      }
  });
 

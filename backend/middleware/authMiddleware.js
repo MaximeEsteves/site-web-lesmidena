@@ -19,6 +19,7 @@ function verifierAdmin(req, res, next) {
     return res.status(403).json({ message: "Accès refusé : Admin uniquement" });
   }
   next();
+  console.log("✅ middleware ok")
 }
 
 module.exports = { verifierToken, verifierAdmin };

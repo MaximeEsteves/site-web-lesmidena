@@ -1,8 +1,7 @@
 // import.js
 require('dotenv').config();
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');  // Importer ObjectId
 const fs = require('fs');
-
 
 async function importCollection() {
   const uri = process.env.MONGO_URI;
@@ -14,8 +13,21 @@ async function importCollection() {
   // Optionnel : vider la collection avant
   await col.deleteMany({});
 
+  // Lire les données JSON
   const docs = JSON.parse(fs.readFileSync("produits.json", "utf-8"));
-  await col.insertMany(docs);
+
+  // Convertir chaque _id en ObjectId
+ const docsWithObjectId = docs.map(doc => {
+  if (doc._id && typeof doc._id === 'string' && doc._id.match(/^[0-9a-fA-F]{24}$/)) {
+    return { ...doc, _id: new ObjectId(doc._id) };
+  }
+  return doc;  // Pas de conversion si pas d'ID ou ID invalide
+});
+
+
+  // Insérer les docs corrigés
+  await col.insertMany(docsWithObjectId);
+
   console.log("Import terminé depuis produits.json");
   await client.close();
 }
