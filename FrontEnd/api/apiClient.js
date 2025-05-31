@@ -1,10 +1,5 @@
 const API_BASE = "http://localhost:3000";
 
-function toFullURL(path) {
-  if (/^https?:\/\//.test(path)) return path;
-  return API_BASE + path.replace(/^\/+/, "");
-}
-
 async function apiRequest(endpoint, method = "GET", data = null, token = null) {
   const headers = { "Content-Type": "application/json" };
   if (token) headers["Authorization"] = `Bearer ${token}`;
@@ -26,6 +21,24 @@ async function apiRequest(endpoint, method = "GET", data = null, token = null) {
   return res.status !== 204 ? await res.json() : null;
 }
 
+// ✅ Nouveau : Créer une session Stripe Checkout
+export async function createStripeCheckoutSession(lignes) {
+  const response = await fetch("http://localhost:3000/api/payment/create-checkout-session", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ lignes }), // ✅ propriété "lignes"
+  });
+
+  if (!response.ok) {
+    throw new Error("Échec du paiement.");
+  }
+
+  return await response.json();
+}
+
+
 // === API spécifiques produits ===
 export async function getAllProducts() {
   return apiRequest("/api/produits");
@@ -46,5 +59,3 @@ export async function updateProduct(id, formData, token) {
 export async function loginAdmin(credentials) {
   return apiRequest("/api/auth/login", "POST", credentials);
 }
-
-export { toFullURL };

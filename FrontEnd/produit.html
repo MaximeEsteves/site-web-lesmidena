@@ -28,6 +28,7 @@
 	<link rel="stylesheet" href="./assets/style.css">
 	<link rel="stylesheet" href="./assets/produit.css">
 	<script type="module" src="produit.js" defer></script>
+	<script type="module" src="script.js" defer></script>
 </head>
 <body>
     <header>
@@ -47,6 +48,9 @@
         <li><a href="#contact">Contact</a></li>
         <li id="user-open"><a href="login.html">Login</a></li>
         <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+        <li id="favoris"><a href="favoris.html"><i class="fa-regular fa-heart"></i><span id="favoris-count">0</span></a></li>
+      	<li id="panier"><a href="panier.html"><i class="fa-solid fa-bag-shopping"></i><span id="panier-count">0</span></a></li>
+
       </ul>
     </nav>
   </div>
@@ -79,8 +83,8 @@
       </div>
       <select name="stock" id="stock-produit">
       </select>
-      <button id="btn-ajout-panier">Ajouter au panier</button>
-      <button id="btn-fav-article"><i class="fa-regular fa-heart"></i></button>
+      <button class="btn-ajout-panier">Ajouter au panier</button>
+      <button class="btn-fav-article"><i class="fa-regular fa-heart"></i></button>
       
       <p class="reference" id="ref-produit"></p>
 
@@ -92,8 +96,10 @@
   </div>
   <section class="autres-produits">
     <h2 id="titre-produit-similaire"></h2>
+  </section>
+  <section class="autres-produits-similaires">
     <h2 id="titre-produit-similaire-autres"></h2>
-    </section>
+  </section>
     <section class="section-information">
       <div class="div-information">
         <article>

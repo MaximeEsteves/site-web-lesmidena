@@ -13,15 +13,25 @@
 	<script src="login.js" type="module" defer></script>
 </head>
 <header>
-	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
-	<nav>
-		<ul>
-			<li><a href="#portfolio">projets</a></li>
-			<li><a href="#contact">contact</a></li>
-			<li id="user-open"><a href="index.html">login</a></li>
-			<li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
-		</ul>
-	</nav>
+  <div class="parallax-wrapper">
+    <img src="./assets/images/image-produit-header.jpg" alt="image accueil les mignonneries de nathalie">
+  </div>
+	<div class="header-content">
+    <nav>
+      <a href="#btn-retour" id="logo-nav-header"><img src="./assets/images/logo-nav.webp" alt="logo les mignonneries de nathalie"></a>
+      <ul class="btn-nav">
+        <li><a href="#btn-retour">Accueil</a></li>
+        <li><a href="#creation">Créations</a></li>
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li id="user-open"><a href="login.html">Login</a></li>
+        <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+        <li id="favoris"><a href="favoris.html"><i class="fa-regular fa-heart"></i><span id="favoris-count">0</span></a></li>
+		<li id="panier"><a href="panier.html"><i class="fa-solid fa-bag-shopping"></i><span id="panier-count">0</span></a></li>
+
+	</ul>
+    </nav>
+  </div>
 </header>
 <main>
     <section id="menu-login" class="zone-connexion">

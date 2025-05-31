@@ -149,8 +149,8 @@ header {
   font-family: Geist, sans-serif;
 }
 
-#btn-ajout-panier,
-#btn-fav-article {
+.btn-ajout-panier,
+.btn-fav-article {
   background-color: #3a5151;
   color: white;
   border: 2px solid #3a5151;
@@ -160,13 +160,14 @@ header {
   cursor: pointer;
   margin-right: 10px;
   font-family: Geist, sans-serif;
-  transition: background-color 0.2s, color 0.2s;
+  transition: 0.3s;
 }
 
-#btn-ajout-panier:hover,
-#btn-fav-article:hover {
-  background-color: white;
+.btn-ajout-panier:hover,
+.btn-fav-article:hover {
+  background-color: transparent;
   color: #3a5151;
+  transition: 0.3s;
 }
 
 .description {
@@ -218,6 +219,7 @@ header {
   display: flex;
   align-items: center;
   gap: 6px;
+  transition: 0.3s;
 }
 .btn-partager:hover {
   background-color: white;
@@ -303,10 +305,11 @@ header {
     display: flex;
     justify-content: space-around;
     margin: auto;
+    gap: 40px;
 }
 .produits-similaire-container-autres{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     margin-top:80px;
     gap: 45px;
 }
@@ -318,6 +321,15 @@ header {
     margin: 40px auto;
     padding: 40px 0px 80px 0px;
     background-color: #fce4da;
+}
+.autres-produits-similaires{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 40px;
+    padding: 40px 0px 80px 0px;
+    border-bottom: 1px solid #fce4da;
 }
 #titre-produit-similaire-autres,
 #titre-produit-similaire{

@@ -1,5 +1,6 @@
-import { getAllProducts, toFullURL } from './api/apiClient.js';
-
+import { getAllProducts } from './api/apiClient.js';
+import { initPageListeFavoris, initPageListePanier, mettreAJourBoutonsPanier, updateFavorisCount } from './addFavorisPanier.js';
+const baseURL = "http://localhost:3000/";
 // Récupère la référence produit depuis l'URL
 function getProduitDepuisURL() {
   const params = new URLSearchParams(window.location.search);
@@ -27,6 +28,7 @@ const messageAvis         = document.getElementById('avis-message');
 const listeAvisBloc       = document.getElementById('liste-avis');
 const btnPartager         = document.getElementById('btn-partager');
 
+
 // Données de partage (seront mises à jour dans displayProductDetails)
 let shareData = {
   title: '',
@@ -38,8 +40,8 @@ let shareData = {
 // Met à jour l'image principale et la modale
 function updateMainImage(index) {
   currentImageIndex = index;
-  mainImage.src = toFullURL(produit.image[index]);
-  fullscreenImage.src = toFullURL(produit.image[index]);
+  mainImage.src = baseURL +produit.image[index];
+  fullscreenImage.src = baseURL + produit.image[index];
   document.querySelectorAll(".thumbnail").forEach((img, i) => {
     img.classList.toggle("active", i === index);
   });
@@ -51,7 +53,7 @@ function initImageGallery() {
   thumbsContainer.innerHTML = '';
   produit.image.forEach((src, idx) => {
     const thumb = document.createElement('img');
-    thumb.src = toFullURL(src);
+    thumb.src = baseURL+src;
     thumb.classList.add('thumbnail');
     if (idx === 0) thumb.classList.add('active');
     thumb.addEventListener('click', () => updateMainImage(idx));
@@ -84,6 +86,10 @@ function initFullScreenModal() {
 
 // Affichage des détails produit
 function displayProductDetails() {
+  const boutonAcheter = document.querySelector(".btn-ajout-panier");
+  boutonAcheter.dataset.id = produit._id;
+  const boutonFavoris = document.querySelector(".btn-fav-article");
+  boutonFavoris.dataset.id = produit._id;
   document.querySelector('.titre-produit-boutique').textContent       = produit.categorie;
   document.querySelector('.titre-produit').textContent               = produit.nom;
   document.getElementById('prix-produit').textContent               = `${produit.prix} €`;
@@ -92,7 +98,7 @@ function displayProductDetails() {
   document.getElementById('desc-produit').innerHTML               = produit.descriptionComplete;
   document.getElementById('materiaux-produit').textContent          = produit.materiaux;
   const coverImg = document.getElementById('image-couverture-boutique');
-  if (produit.imageCouverture) coverImg.src = toFullURL(produit.imageCouverture);
+  if (produit.imageCouverture) coverImg.src = baseURL+produit.imageCouverture;
 
   // Mettre à jour shareData
   shareData.title = produit.nom;
@@ -118,7 +124,7 @@ function initReviewForm() {
   formAvis.addEventListener('submit', e => {
     e.preventDefault();
     const nom  = document.getElementById('avis-nom').value.trim();
-    const note = +document.getElementById('avis-note').value;
+    const note = document.getElementById('avis-note').value;
     const com  = document.getElementById('avis-commentaire').value.trim();
     if (!nom || !note || !com) return;
     const nouvel = { nom, note, commentaire: com, date: new Date().toISOString() };
@@ -162,7 +168,7 @@ function produitSupplementaire() {
     const carte = document.createElement("div");
     carte.classList.add("carte-produit");
     carte.innerHTML = `
-      <img src="${toFullURL(p.image[0])}" alt="${p.nom}">
+      <img src="${baseURL + p.image[0]}" alt="${p.nom}">
       <h3>${p.nom}</h3>
       <p>${p.prix.toFixed(2)} €</p>
     `;
@@ -191,7 +197,7 @@ function produitSupplementaireAutres() {
     const c = document.createElement('div');
     c.classList.add('carte-produit-autres');
     c.innerHTML = `
-      <img src="${toFullURL(p.image[0])}" alt="${p.nom}">
+      <img src="${baseURL+p.image[0]}" alt="${p.nom}">
       <h3>${p.nom}</h3>
       <p>${p.prix.toFixed(2)} €</p>
     `;
@@ -203,14 +209,13 @@ function produitSupplementaireAutres() {
 
 // Initialisation de l'ensemble
 async function init() {
-  allProducts = await getAllProducts();
+  const allProducts = await getAllProducts();
   const ref = getProduitDepuisURL();
   produit = allProducts.find(p => p.reference === ref);
   if (!produit) {
     document.getElementById("portfolio").innerHTML = "<p>Produit non trouvé.</p>";
     return;
   }
-
   initImageGallery();
   initFullScreenModal();
   displayProductDetails();
@@ -218,6 +223,10 @@ async function init() {
   initReviewForm();
   produitSupplementaire();
   produitSupplementaireAutres();
+  initPageListeFavoris(allProducts); 
+  initPageListePanier(allProducts);
+  mettreAJourBoutonsPanier();   
+  updateFavorisCount();
 
   // Partage
   btnPartager.addEventListener('click', async () => {
@@ -229,14 +238,4 @@ async function init() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', init);
-window.addEventListener("scroll", function() {
-  const scrollPosition = window.scrollY;
-  const parallaxImage = document.querySelector('.parallax-wrapper img');
-  // Ajuster ce coefficient pour modifier l'intensité du décalage
-  parallaxImage.style.transform = "translateY(" + (scrollPosition * 0.5) + "px)";
-  const header = document.querySelector('header');
-    window.addEventListener('scroll', () => {
-      header.classList.toggle('scrolled', window.scrollY > 50);
-    });
-});
+document.addEventListener('DOMContentLoaded', init);   

@@ -1,5 +1,6 @@
 // Fonction utilitaire fetchData
 import { getAllProducts, deleteProduct, createProduct, updateProduct } from './api/apiClient.js';
+import { initPageListeFavoris, updateFavorisCount,initPageListePanier,mettreAJourBoutonsPanier } from './addFavorisPanier.js';
 const baseURL = "http://localhost:3000/";
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -11,6 +12,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Appeler projets() et filtres() avec les données récupérées
     projets(productsData);
     filtres(productsData);
+    initPageListeFavoris(productsData); 
+    initPageListePanier(productsData);
+    mettreAJourBoutonsPanier();   
+    updateFavorisCount();
 
     const header = document.querySelector('header');
     window.addEventListener('scroll', () => {
@@ -112,7 +117,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const figure = document.createElement("figure");
   figure.dataset.id = produit._id;
     const img = document.createElement("img");
-  const baseURL = "http://localhost:3000/";
     const raw = Array.isArray(produit.image) 
       ? produit.image[0] 
       : produit.image || "";
@@ -133,12 +137,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     const bouton = document.createElement("button");
     bouton.textContent = "Acheter";
     bouton.classList.add("btn-acheter");
+    bouton.dataset.id = produit._id;
+    const btnFav = document.createElement("button");
+    btnFav.classList.add("btn-fav-article");
+    btnFav.dataset.id = produit._id;
+    const iconFav = document.createElement("i");
+    iconFav.classList.add("fa-regular", "fa-heart");
+    btnFav.appendChild(iconFav);
 
     figure.appendChild(img);
     figure.appendChild(figcaption);
     figure.appendChild(description);
     figure.appendChild(prix);
     figure.appendChild(bouton);
+    figure.appendChild(btnFav);
 
   // Boutons pour utilisateur connecté
   if (localStorage.getItem("token")) {
@@ -161,8 +173,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     btnModifier.appendChild(iconModifier);
     btnModifier.addEventListener("click", () => {
       initProductModal('edit', produit)
-      console.log("ii");
-      
     });
     figure.appendChild(btnModifier);
   }
@@ -480,7 +490,6 @@ async function deletePhoto(figure) {
      }
      if (e.target.closest(".div-modification")) {
          initProductModal('add');
-         console.log("zoz")
      }
  });
 
@@ -501,10 +510,3 @@ async function deletePhoto(figure) {
      modeEdition.appendChild(texteEdition);
      body.appendChild(modeEdition);
  }
-
-window.addEventListener("scroll", function() {
-  const scrollPosition = window.scrollY;
-  const parallaxImage = document.querySelector('.parallax-wrapper img');
-  // Ajuster ce coefficient pour modifier l'intensité du décalage
-  parallaxImage.style.transform = "translateY(" + (scrollPosition * 0.5) + "px)";
-});

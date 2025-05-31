@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+	<title>Mignonneries de Nathalie - Accessoires mode artisanale</title>
+  <!-- Open Graph -->
+  <meta property="og:type"        content="product" />
+  <meta property="og:title"       content="Nom du produit – Mignonneries de Nathalie" />
+  <meta property="og:description" content="Description courte du produit" />
+  <meta property="og:image"       content="https://ton-site.com/images/produit.jpg" />
+  <meta property="og:url"         content="https://ton-site.com/produit.html?ref=LA-REF" />
+  <meta property="og:site_name"   content="Mignonneries de Nathalie" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Nom du produit – Mignonneries de Nathalie" />
+  <meta name="twitter:description" content="Description courte du produit" />
+  <meta name="twitter:image"       content="https://ton-site.com/images/produit.jpg" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" >
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+	<meta name="description" content="">
+	<link rel="stylesheet" href="./assets/style.css">
+	<link rel="stylesheet" href="./assets/panier.css">
+	<script type="module" src="panier.js" defer></script>
+	<script type="module" src="script.js" defer></script>
+</head>
+<body>
+    <header>
+      <div class="parallax-wrapper">
+			<img id="image-couverture-boutique" src="./assets/images/image-produit-header.jpg" alt="image accueil les mignonneries de nathalie">
+			</div>
+      <div class="titre-header">
+				<h1 class="titre-produit-boutique"></h1>
+			</div>
+<div class="header-content">
+    <nav>
+      <a href="#btn-retour" id="logo-nav-header"><img src="./assets/images/logo-nav.webp" alt="logo les mignonneries de nathalie"></a>
+      <ul class="btn-nav">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="#creation">Créations</a></li>
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li id="user-open"><a href="login.html">Login</a></li>
+        <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+        <li id="favoris"><a href="favoris.html"><i class="fa-regular fa-heart"></i><span id="favoris-count">0</span></a></li>
+      	<li id="panier"><a href="panier.html"><i class="fa-solid fa-bag-shopping"></i><span id="panier-count">0</span></a></li>
+
+      </ul>
+    </nav>
+  </div>
+</header>
+<body>
+  <main>
+    <h1>Mon panier</h1>
+
+    <section id="panier-container">
+      <!-- Les articles seront générés ici par JS -->
+    </section>
+
+    <section id="total-section">
+      <p>Frais de port : <span id="frais-livraison">4.99 €</span></p>
+      <p>Total : <span id="total-amount">0 €</span></p>
+    </section>
+<section>
+    <form id="form-livraison">
+      <h2>Adresse de livraison</h2>
+
+      <label for="nom">Nom complet *</label>
+      <input type="text" id="nom" name="nom" placeholder="Michel Pont" required>
+
+      <label for="adresse">Adresse *</label>
+      <input type="text" id="adresse" name="adresse" list="suggestions" placeholder="2 rue des muriers" required>
+      <datalist id="suggestions"></datalist>
+      
+      <label for="ville">Ville *</label>
+      <input type="text" id="ville" name="ville" placeholder="Paris" required>
+
+      <label for="code-postal">Code postal *</label>
+      <input type="text" id="code-postal" name="code-postal"  pattern="\d{5}"  placeholder="75000" required>
+
+      <label for="email">Email *</label>
+      <input type="email" id="email" name="email" required placeholder="exemple@exemple.com">
+
+      <label for="telephone">Téléphone *</label>
+      <input type="tel" id="telephone" name="telephone" inputmode="numeric"  pattern="\d{10}" required placeholder="Ex : 0606060606">
+
+
+      <button type="submit" id="payer-btn">Procéder au paiement</button>
+    </form>
+    </section>
+    <section class="section-information">
+      <div class="div-information">
+        <article>
+          <div class="produit-similaire">
+            <img src="./assets/icons/icone-artisanale.png" alt="">
+            <h4>Création artisanale</h4>
+            <p>Toutes nos créations sont réalisées à la main avec passion dans notre atelier dans le Tarn (81).</p>
+          </div>
+        </article>
+        <article>
+          <div class="produit-similaire">
+            <img src="./assets/icons/icone-ecoresponsable.png" alt="">
+            <h4>Écoresponsable</h4>
+            <p>Nos produits sont réutilisables et fabriqués, pour la plupart, avec des matériaux de seconde main.</p>
+          </div>
+        </article>
+      <article>
+        <div class="produit-similaire">
+          <img src="./assets/icons/icone-livraison.png" alt="">
+          <h4>Livraison rapide</h4>
+          <p>Nos produits sont emballés par nos soins et envoyés dans les plus brefs délais.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+  
+
+
+  
+</main>
+<footer>
+  <div class="div-footer">
+                <h3 class="titre-footer">À propos</h3>
+                <ul class="lien-footer">
+                    <li><a href="#">Mentions légales</a></li>
+                    <li><a href="#">Conditions générales </a></li>
+                    <li><a href="#">À propos</a></li>
+                </ul>
+            </div>
+            <div class="div-footer">
+              <p>© 2024 - 2025 Mignonneries-Nathalie</p>
+              <ul class="lien-footer-reseaux">
+                <li><a href="https://www.instagram.com/mignonneries.nathalie/" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+                <li><a href="https://www.tiktok.com/@les_mignonneries_de_nath"><i class="fa-brands fa-tiktok"></i></a></li>
+                <li><a href="https://www.linkedin.com/in/mignonneries-de-nathalie-499884334/"><i class="fa-brands fa-linkedin"></i></a></li>
+                <li><a href="https://www.youtube.com/channel/UCEfuaMURKRQH5zqfeSbv1RQ"><i class="fa-brands fa-youtube"></i></a></li>
+                <li><a href="https://fr.pinterest.com/lesmidena/"><i class="fa-brands fa-pinterest"></i></a></li>
+              </ul>
+            </div>
+            <div class="div-footer">
+                <h3 class="titre-footer">Assistance</h3>
+                <ul class="lien-footer">
+                  <li><a href="#">Nous contacter</a></li>
+                  <li><a href="#">Avis google</a></li>
+                  <li><a href="#">Les tissus</a></li>
+                </ul>
+            </div>
+</footer>
+</body>
+</html>
