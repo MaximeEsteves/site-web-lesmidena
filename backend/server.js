@@ -19,10 +19,10 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/payment", paymentRoutes);
 
 // Frontend static files
-app.use(express.static(path.join(__dirname, "../frontend")));
+app.use(express.static(path.join(__dirname, "../FrontEnd")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/index.html"));
+  res.sendFile(path.join(__dirname, "../FrontEnd/index.html"));
 });
 
 mongoose.connect(process.env.MONGO_URI)

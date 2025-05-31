@@ -15,17 +15,5 @@
     "mongoose": "^7.2.2",
     "multer": "^2.0.0",
     "stripe": "^18.2.0"
-  },
-  "description": "{\r   \"email\": \"admin@monsite.com\",\r   \"motDePasse\": \"ChangeMe123!\"\r }",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MaximeEsteves/bm-boutique-backend.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MaximeEsteves/bm-boutique-backend/issues"
-  },
-  "homepage": "https://github.com/MaximeEsteves/bm-boutique-backend#readme"
+  }
 }
