@@ -1,5 +1,5 @@
 const Utilisateur = require("../models/Utilisateur");
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
@@ -8,7 +8,7 @@ exports.register = async (req, res) => {
     return res.status(400).json({ message: "Email déjà utilisé" });
   }
 
-  const hash = await bcrypt.hash(motDePasse, 10);
+  const hash = await bcryptjs.hash(motDePasse, 10);
   const user = await new Utilisateur({ email, motDePasse: hash }).save();
   res.status(201).json({ message: "Utilisateur créé", id: user._id });
 };
@@ -26,7 +26,7 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: "Email ou mot de passe invalide" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.motDePasse);
+    const isMatch = await bcryptjs.compare(password, user.motDePasse);
     if (!isMatch) {
       return res.status(401).json({ message: "Email ou mot de passe invalide" });
     }
