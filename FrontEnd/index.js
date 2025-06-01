@@ -1,7 +1,7 @@
 // Fonction utilitaire fetchData
 import { getAllProducts, deleteProduct, createProduct, updateProduct } from './api/apiClient.js';
 import { initPageListeFavoris, updateFavorisCount,initPageListePanier,mettreAJourBoutonsPanier } from './addFavorisPanier.js';
-const baseURL = "http://localhost:3000/";
+const baseURL = "";
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     document

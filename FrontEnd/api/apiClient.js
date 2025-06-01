@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:3000";
+const API_BASE = "";
 
 async function apiRequest(endpoint, method = "GET", data = null, token = null) {
   const headers = { "Content-Type": "application/json" };
@@ -23,7 +23,7 @@ async function apiRequest(endpoint, method = "GET", data = null, token = null) {
 
 // ✅ Nouveau : Créer une session Stripe Checkout
 export async function createStripeCheckoutSession(lignes) {
-  const response = await fetch("http://localhost:3000/api/payment/create-checkout-session", {
+  const response = await fetch(`${API_BASE}/api/payment/create-checkout-session`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

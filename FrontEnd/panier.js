@@ -1,7 +1,7 @@
 import { updateFavorisCount } from "./addFavorisPanier.js";
 import { createStripeCheckoutSession } from './api/apiClient.js';
 
-const baseURL = "http://localhost:3000/";
+const baseURL = "";
 const panierContainer = document.getElementById("panier-container");
 const totalAmount = document.getElementById("total-amount");
 const formLivraison = document.getElementById("form-livraison");

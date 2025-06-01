@@ -1,6 +1,6 @@
 import { getAllProducts } from './api/apiClient.js';
 import { initPageListeFavoris, initPageListePanier, mettreAJourBoutonsPanier, updateFavorisCount } from './addFavorisPanier.js';
-const baseURL = "http://localhost:3000/";
+const baseURL = "";
 // Récupère la référence produit depuis l'URL
 function getProduitDepuisURL() {
   const params = new URLSearchParams(window.location.search);
