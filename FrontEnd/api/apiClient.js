@@ -1,6 +1,6 @@
 //const API_BASE = "http://localhost:3000";
 //production 
-const API_BASE = "";
+const API_BASE = "https://site-web-lesmidena.onrender.com";
 
 async function apiRequest(endpoint, method = "GET", data = null, token = null) {
   const headers = { "Content-Type": "application/json" };
