@@ -1,7 +1,9 @@
 // Fonction utilitaire fetchData
 import { getAllProducts, deleteProduct, createProduct, updateProduct } from './api/apiClient.js';
 import { initPageListeFavoris, updateFavorisCount,initPageListePanier,mettreAJourBoutonsPanier } from './addFavorisPanier.js';
-const baseURL = "http://localhost:3000/";
+//const baseURL = "http://localhost:3000/";
+//production 
+const baseURL = "";
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     window.history.scrollRestoration = 'manual'; window.scrollTo(0, 0);
