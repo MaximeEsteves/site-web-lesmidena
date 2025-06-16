@@ -1,15 +1,10 @@
-import { getAllProducts } from './api/apiClient.js';
+import { getAllProducts, getProductByRef } from './api/apiClient.js';
 import { initPageListeFavoris, initPageListePanier, mettreAJourBoutonsPanier, updateFavorisCount } from './addFavorisPanier.js';
-const baseURL = "";
-// Récupère la référence produit depuis l'URL
-function getProduitDepuisURL() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('ref');
-}
+const baseURL = "http://localhost:3000/";
+
 
 // Variables globales
-let produit;
-let allProducts = [];
+let produit, allProducts;
 let currentImageIndex = 0;
 
 // Sélecteurs DOM
@@ -173,7 +168,7 @@ function produitSupplementaire() {
       <p>${p.prix.toFixed(2)} €</p>
     `;
     carte.addEventListener('click', () => {
-      window.location.href = `produit.html?ref=${encodeURIComponent(p.reference)}`;
+      window.location.href = `/produit/${encodeURIComponent(p.reference)}`;
     });
     container.appendChild(carte);
   });
@@ -201,41 +196,56 @@ function produitSupplementaireAutres() {
       <h3>${p.nom}</h3>
       <p>${p.prix.toFixed(2)} €</p>
     `;
-    c.addEventListener('click', () => window.location.href = `produit.html?ref=${encodeURIComponent(p.reference)}`);
+    c.addEventListener('click', () => window.location.href = `/produit/${encodeURIComponent(p.reference)}`);
     cont.appendChild(c);
   });
   titre.appendChild(cont);
 }
 
-// Initialisation de l'ensemble
-async function init() {
-  const allProducts = await getAllProducts();
-  const ref = getProduitDepuisURL();
-  produit = allProducts.find(p => p.reference === ref);
-  if (!produit) {
-    document.getElementById("portfolio").innerHTML = "<p>Produit non trouvé.</p>";
-    return;
-  }
-  initImageGallery();
-  initFullScreenModal();
-  displayProductDetails();
-  initStockSelector();
-  initReviewForm();
-  produitSupplementaire();
-  produitSupplementaireAutres();
-  initPageListeFavoris(allProducts); 
-  initPageListePanier(allProducts);
-  mettreAJourBoutonsPanier();   
-  updateFavorisCount();
 
-  // Partage
-  btnPartager.addEventListener('click', async () => {
-    if (navigator.share) {
-      try { await navigator.share(shareData); } catch (err) { console.error(err); }
-    } else {
-      alert("Votre navigateur ne supporte pas le partage direct.");
+
+async function init() {
+  window.history.scrollRestoration = 'manual'; window.scrollTo(0, 0);
+  try {
+
+    // 1) Charger tous les produits
+    allProducts = await getAllProducts();
+
+    // 2) Récupérer la référence dans l’URL
+    const ref = window.location.pathname.split('/').pop();
+
+    // 3) Charger le produit cible
+    produit = await getProductByRef(ref);
+    
+    // 4) Si pas trouvé
+    if (!produit) {
+      document.querySelector('main').innerHTML = "<p>Produit non trouvé.</p>";
+      return;
     }
-  });
+
+    // 5) Maintenant que 'produit' et 'allProducts' sont définis...
+    displayProductDetails();
+    initImageGallery();
+    initFullScreenModal();
+    initStockSelector();
+    initReviewForm();
+    produitSupplementaire();
+    produitSupplementaireAutres();
+    initPageListeFavoris(allProducts);
+    initPageListePanier(allProducts);
+    mettreAJourBoutonsPanier();
+    updateFavorisCount();
+
+    // 6) Partage…
+    btnPartager.addEventListener('click', async () => {
+      if (navigator.share) {
+        try { await navigator.share(shareData); } catch {}
+      } else alert("Partage non supporté.");
+    });
+  } catch (err) {
+    console.error("Erreur init page produit:", err);
+    document.querySelector('main').innerHTML = "<p>Erreur lors du chargement.</p>";
+  }
 }
 
-document.addEventListener('DOMContentLoaded', init);   
+document.addEventListener('DOMContentLoaded', init);

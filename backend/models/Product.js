@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema({
   materiaux: { type: String },
   prix: { type: Number, required: true },
   reference: { type: String },
-  stock: { type: Number }
+  stock: {type: Number, required: true, min: 0, default: 0}
 }, {
   timestamps: true // Pour createdAt et updatedAt
 });

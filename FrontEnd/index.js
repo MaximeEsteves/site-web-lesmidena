@@ -1,9 +1,10 @@
 // Fonction utilitaire fetchData
 import { getAllProducts, deleteProduct, createProduct, updateProduct } from './api/apiClient.js';
 import { initPageListeFavoris, updateFavorisCount,initPageListePanier,mettreAJourBoutonsPanier } from './addFavorisPanier.js';
-const baseURL = "";
+const baseURL = "http://localhost:3000/";
 document.addEventListener('DOMContentLoaded', async () => {
   try {
+    window.history.scrollRestoration = 'manual'; window.scrollTo(0, 0);
     document
       .getElementById('file-upload-couverture')
       .addEventListener('change', previewFileCouverture);
@@ -52,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById("portfolio").innerHTML = "";
     projets(worksData);
-
+    mettreAJourBoutonsPanier();
     btnTous.classList.add("click-btn");
   });
   zoneBtn.appendChild(btnTous);
@@ -69,6 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById("portfolio").innerHTML = "";
       const filtered = worksData.filter(article => article.categorie === category);
       projets(filtered);
+      mettreAJourBoutonsPanier();
 
       btn.classList.add("click-btn");
     });
@@ -80,6 +82,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Fonction d'affichage des projets avec lazy loading
  function projets(worksData) {
+ 
+  
   const portfolio = document.getElementById("portfolio");
   portfolio.classList.add("gallery");
    portfolio.innerHTML = ""; // Nettoyer le conteneur avant d'ajouter les projets
@@ -114,6 +118,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   }, { threshold: 0.1 });
 
   worksData.forEach(produit => {
+     // Ne pas créer l'élément si l'id n'existe pas
+    if (!produit._id) {
+      console.warn("Produit sans _id :", produit);
+      return;
+    }
+    if(produit.stock <= 0 ) return
     const figure = document.createElement("figure");
   figure.dataset.id = produit._id;
     const img = document.createElement("img");
@@ -131,25 +141,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     description.classList.add("description-carte");
     description.textContent = produit.description;
 
+    const divPrix = document.createElement("div");
+    divPrix.classList.add("div-prix")
+
+
     const prix = document.createElement("p");
     prix.textContent = `${produit.prix}€`;
 
     const bouton = document.createElement("button");
-    bouton.textContent = "Acheter";
+    bouton.textContent = "Ajouter";
     bouton.classList.add("btn-acheter");
     bouton.dataset.id = produit._id;
     const btnFav = document.createElement("button");
     btnFav.classList.add("btn-fav-article");
     btnFav.dataset.id = produit._id;
     const iconFav = document.createElement("i");
-    iconFav.classList.add("fa-regular", "fa-heart");
+    iconFav.classList.add("fa-solid", "fa-heart");
     btnFav.appendChild(iconFav);
 
+    divPrix.appendChild(prix)
+    divPrix.appendChild(bouton)
     figure.appendChild(img);
     figure.appendChild(figcaption);
     figure.appendChild(description);
-    figure.appendChild(prix);
-    figure.appendChild(bouton);
+    figure.appendChild(divPrix);
     figure.appendChild(btnFav);
 
   // Boutons pour utilisateur connecté
@@ -180,9 +195,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     portfolio.appendChild(figure);
     imgObserver.observe(img);
     img.addEventListener("click", () => {
-      window.location.href = `produit.html?ref=${produit.reference}`;
+      window.location.href = `/produit/${produit.reference}`;
     });
   });
+  
 }
 // 1) Initialiser Quill (à faire une seule fois)
 const editorDescriptionComplete = new Quill('#editor-descriptionComplete', { theme: 'snow' });

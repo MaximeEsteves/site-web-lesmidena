@@ -1,51 +1,66 @@
 // controllers/paymentController.js
-const Produit = require('../models/Product');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const Produit = require("../models/Product");
+const Order = require("../models/Order");       // on va l'utiliser plus tard
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 exports.createCheckoutSession = async (req, res) => {
   try {
-    const lignes = req.body.lignes;
-
-    if (!Array.isArray(lignes)) {
-      return res.status(400).json({ message: "Le panier est invalide." });
+    const { lignes, customer } = req.body;
+    // lignes : [{ id: ..., quantite: ... }, ...]
+    // customer : { nom, adresse, ville, cp, email, telephone }
+    if (!Array.isArray(lignes) || !customer) {
+      return res.status(400).json({ message: "Données du panier ou du client manquantes." });
     }
 
-    // 1) Initialise bien line_items avant la boucle
+    // 1) Calculer les line_items Stripe
     const line_items = [];
+    let totalOrder = 0;
 
-    // 2) Parcours chaque ligne pour construire line_items
     for (const ligne of lignes) {
-      // si tu envoies _id depuis le front, récupère ligne._id
-      const produitId = ligne.id || ligne._id;
-      const quantite   = ligne.quantite || 1;
-
+      const produitId = ligne.id;
+      const quantite = ligne.quantite || 1;
       const produit = await Produit.findById(produitId);
       if (!produit) {
         return res.status(400).json({ message: `Produit non trouvé (${produitId})` });
       }
 
+      const prixCentimes = Math.round(produit.prix * 100);
+      totalOrder += produit.prix * quantite;
+
       line_items.push({
         price_data: {
-          currency: 'eur',
+          currency: "eur",
           product_data: {
             name: produit.nom,
-            description: produit.description || '',
+            description: produit.description || "",
           },
-          unit_amount: Math.round(produit.prix * 100), // prix en centimes
+          unit_amount: prixCentimes,
         },
         quantity: quantite,
       });
     }
-
-    // 3) Crée la session Stripe avec line_items bien initialisé
+    const produitsJSON = JSON.stringify(lignes); 
+    // 2) Création de la session Stripe avec metadata
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'payment',
-      line_items,
-      success_url: `./FrontEnd/success.html`,
-      cancel_url:  `./FrontEnd/cancel.html`,
-    });
+  payment_method_types: ["card"],
+  mode: "payment",
+  line_items,
+  metadata: {
+    // infos client
+    nom:       customer.nom,
+    adresse:   customer.adresse,
+    ville:     customer.ville,
+    cp:        customer.cp,
+    email:     customer.email,
+    telephone: customer.telephone,
+    // liste des produits en JSON
+    products: produitsJSON,
+  },
+  success_url: `${process.env.FRONTEND_URL}/success.html`,
+  cancel_url:  `${process.env.FRONTEND_URL}/cancel.html`,
+});
 
+    // 3) Répondre au front-end avec l’URL de redirection Stripe
     return res.status(200).json({ url: session.url });
   } catch (err) {
     console.error("Erreur Stripe:", err);

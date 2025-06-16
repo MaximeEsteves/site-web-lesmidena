@@ -19,6 +19,89 @@
     display: none;
 }
 
+/* zone articles boutique */
+#portfolio{
+	display:flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	align-items: center;
+	font-family: Geist;
+	font-size: 16px;
+	color: black;
+  width: 80%;
+  margin: auto;
+}
+.gallery figure {
+	position: relative;
+	padding: 10px;
+	border-radius: 12px;
+	text-align: start;
+	width: 300px;
+  height: 500px;
+	margin: 0;
+}
+.gallery figure h3{
+  margin: 10px auto;
+	color: #3a5151;
+	font-size: 20px;
+  height: 50px;
+	line-height: 25px;
+}
+.description-carte{
+	height: 50px;
+	line-height: 25px;
+}
+.gallery img {
+	width: 100%;
+	height: 300px;
+	object-fit: cover;
+	transition: 0.3s;
+	box-shadow: 0px 8px 14px 4px #00000017;
+}
+.gallery img:hover {
+  border-radius: 8px;
+	transition: 0.3s;
+	cursor: pointer;
+  box-shadow: 0px 8px 14px 4px rgba(0, 0, 0, 0.2);
+}
+.div-prix{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.btn-fav-article{
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	background-color: transparent !important;
+	color: white;
+	border: none !important;
+	cursor: pointer;
+	font-family: Geist;
+	font-size: 26px !important;
+  	transition: 0.3s;
+}
+.btn-acheter {
+	margin-top: 0px !important;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	font-family: Geist;
+	border: 2px solid transparent;
+  	transition: 0.3s;
+  	margin-right: 0px;
+}
+.btn-fav-article:hover{
+	color: #3a5151;
+}
+.btn-acheter:hover{
+	color: #3a5151;
+	background-color: transparent;
+	border: 2px solid #3a5151;
+	transition: 0.3s;
+}
+
 /* modal */ 
 /* ══ Overlay ══ */
 .modal-content {

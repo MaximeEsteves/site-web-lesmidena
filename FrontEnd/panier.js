@@ -1,7 +1,6 @@
 import { updateFavorisCount } from "./addFavorisPanier.js";
 import { createStripeCheckoutSession } from './api/apiClient.js';
-
-const baseURL = "";
+const baseURL = "http://localhost:3000/";
 const panierContainer = document.getElementById("panier-container");
 const totalAmount = document.getElementById("total-amount");
 const formLivraison = document.getElementById("form-livraison");
@@ -40,7 +39,7 @@ function renderPanier() {
     image.src = baseURL + produit.image;
     image.alt = produit.nom;
     image.addEventListener("click", () => {
-      window.location.href = `produit.html?ref=${produit.reference}`;
+      window.location.href = `/produit.html/${produit.reference}`;
     });
 
     const nom = document.createElement('h3');
@@ -153,13 +152,17 @@ formLivraison.addEventListener("submit", async (e) => {
   }
 
   // Tu peux ici envoyer les infos à ton backend si besoin, mais Stripe ne les prend pas directement
-  try {
-    const lignes = panier.map(p => ({
-  id: p._id,
-  quantite: p.quantite || 1
+  const lignes = panier.map(p => ({
+    id: p._id,
+    quantite: p.quantite || 1
   }));
 
-  const session = await createStripeCheckoutSession(lignes);
+   // On prépare l'objet customer
+    const customer = { nom, adresse, ville, cp, email, telephone };
+
+  try {
+
+  const session = await createStripeCheckoutSession(lignes,customer);
 
     window.location.href = session.url;
   } catch (err) {

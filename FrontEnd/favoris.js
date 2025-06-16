@@ -10,7 +10,7 @@ mettreAJourBoutonsPanier();
 updateFavorisCount();
 });
 
-const baseURL = "";
+const baseURL = "http://localhost:3000/";
 
 // Fonction principale d'affichage des favoris
 function getProduitFavoris() {
