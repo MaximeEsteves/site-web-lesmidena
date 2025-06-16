@@ -1,6 +1,8 @@
 import { getAllProducts, getProductByRef } from './api/apiClient.js';
 import { initPageListeFavoris, initPageListePanier, mettreAJourBoutonsPanier, updateFavorisCount } from './addFavorisPanier.js';
-const baseURL = "http://localhost:3000/";
+//const baseURL = "http://localhost:3000/";
+//production 
+const baseURL = "";
 
 
 // Variables globales
